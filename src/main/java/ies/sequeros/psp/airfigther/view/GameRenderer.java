@@ -43,6 +43,7 @@ public class GameRenderer extends Thread {
             long now = System.nanoTime();
             long updateLength = now - lastUpdateTime;
             lastUpdateTime = now;
+            gameBoard.processInput();
 
             //DECIDIR EN FUNCIÓN DEL ESTADO QUE HACER, CASI
             //SIEMPRE LLAMAR AL JPANEL PARA REPINTAR
@@ -98,6 +99,7 @@ public class GameRenderer extends Thread {
             this.renderBackground(g,width,height);
             //dibujar los elementos
             this.renderPlayer(g);
+            this.renderDebug(g);
 
             //RECORRER EL RESTO DE ELEMNTOS Y DIBUJARLO
 
@@ -113,7 +115,17 @@ public class GameRenderer extends Thread {
         }
     }
 
-    public void renderDebug(Graphics g) {
+    private void renderDebug(Graphics g) {
+
+        g.setColor(Color.BLUE);
+        Player p = gameBoard.getPlayer();
+
+        int x = (int) p.getPosition().getX();
+        int y = (int) p.getPosition().getY();
+
+        if(gameContext.isDebugMode()){
+           g.drawRect(x, y, p.getSize().getWidth(), p.getSize().getHeight());
+        }
 
 
 
