@@ -10,29 +10,32 @@ public class GameContext {
     private volatile GameStatus lastStatus = GameStatus.MENU;
     private volatile boolean debugMode = false;
     private final BlockingQueue<SoundEffect> soundQueue = new LinkedBlockingQueue<>();
+
     public GameContext(GameStatus status, boolean debugMode) {
         this.status = status;
         this.debugMode = debugMode;
     }
-    public GameStatus getStatus() {
+    public synchronized GameStatus getStatus() {
 
         return status;
     }
-    public void setStatus(GameStatus status) {
+    public synchronized void setStatus(GameStatus status) {
         if(this.status!=status) {
         this.lastStatus =this.status;
         }
         this.status = status;
     }
-    public GameStatus getLastStatus() {
+
+
+    public synchronized GameStatus getLastStatus() {
         return lastStatus;
     }
-    public GameStatus consumeLastStatus() {
+    public synchronized GameStatus consumeLastStatus() {
         GameStatus tempo=this.lastStatus;
         this.lastStatus=status;
         return tempo;
     }
-    public void setLastStatus(GameStatus lastStatus) {
+    public synchronized void setLastStatus(GameStatus lastStatus) {
         this.lastStatus = lastStatus;
     }
     public boolean isDebugMode() {
