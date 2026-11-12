@@ -99,7 +99,15 @@ public class GameRenderer extends Thread {
         if (this.gameBoard != null) {
 
             this.renderBackground(g,width,height);
-            //dibujar los elementos
+            if (gameContext.getStatus() == GameStatus.MENU) {
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 24));
+
+                String texto = "Pulsa P para empezar";
+                int anchoTexto = g.getFontMetrics().stringWidth(texto);
+                g.drawString(texto, (width - anchoTexto) / 2, height / 2);
+                return;
+            }
             this.renderPlayer(g);
             this.renderDebug(g);
 
