@@ -39,7 +39,7 @@ public class GameRenderer extends Thread {
 
     public void run() {
         long lastUpdateTime = System.nanoTime();
-        while (true) {
+        while (gameContext.getStatus() != GameStatus.GAME_OVER) {
             long now = System.nanoTime();
             long updateLength = now - lastUpdateTime;
             lastUpdateTime = now;
@@ -76,6 +76,8 @@ public class GameRenderer extends Thread {
                     background.getXPosition() + anchoImagen,
                     0, anchoImagen,
                     altoPanel, null
+
+
             );
         } else {
             //  por si falla la imagen
