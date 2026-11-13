@@ -44,7 +44,9 @@ public class GameRenderer extends Thread {
             long now = System.nanoTime();
             long updateLength = now - lastUpdateTime;
             lastUpdateTime = now;
-            gameBoard.processInput();
+            synchronized (gameBoard) {
+                gameBoard.processInput();
+            }
 
             //DECIDIR EN FUNCIÓN DEL ESTADO QUE HACER, CASI
             //SIEMPRE LLAMAR AL JPANEL PARA REPINTAR

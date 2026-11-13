@@ -10,6 +10,8 @@ import ies.sequeros.psp.airfigther.input.KeyBoardStatus;
 import ies.sequeros.psp.airfigther.model.Player;
 import ies.sequeros.psp.airfigther.view.GameRenderer;
 import ies.sequeros.psp.airfigther.view.ScrollingBackground;
+import ies.sequeros.psp.airfigther.engine.PhysicsEngine;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +28,7 @@ public class Game extends JPanel {
     public static int HEIGHT = 240 * 2;
 
     private final GameBoard gameBoard;
+    private final PhysicsEngine physicsEngine;
     private final GameRenderer gameRenderer;
     //private volatile Player player;
 
@@ -60,13 +63,14 @@ public class Game extends JPanel {
         //HILO PARA PINTAR
         //HILO MUSICA DE FONDO
         //HILO EFECTOS SONIDO
-        //HILO DE LA FISICA
+        this.physicsEngine = new PhysicsEngine(this.gameBoard, this.gameContext);
         this.gameRenderer = new GameRenderer(
                 this.gameContext, this.gameBoard, this);
 
         // Iniciar los hilos
 
         this.gameRenderer.start();
+        this.physicsEngine.start();
     }
 
 
@@ -74,7 +78,9 @@ public class Game extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (this.gameRenderer != null) {
-            this.gameRenderer.render(g);
+            synchronized (gameBoard) {
+                this.gameRenderer.render(g);
+            }
         }
     }
 
