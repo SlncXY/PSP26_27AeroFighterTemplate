@@ -6,6 +6,7 @@ import ies.sequeros.psp.airfigther.engine.GameStatus;
 import ies.sequeros.psp.airfigther.model.Bullet;
 import ies.sequeros.psp.airfigther.model.Player;
 import ies.sequeros.psp.airfigther.model.enemy.Enemy;
+import ies.sequeros.psp.airfigther.model.Element;
 
 import javax.swing.*;
 import java.awt.*;
@@ -112,6 +113,9 @@ public class GameRenderer extends Thread {
                 g.drawString(texto, (width - anchoTexto) / 2, height / 2);
                 return;
             }
+            this.renderElements(g);
+            this.renderPlayer(g);
+            this.renderDebug(g);
             this.renderPlayer(g);
             this.renderDebug(g);
 
@@ -126,6 +130,38 @@ public class GameRenderer extends Thread {
             //PAUSED -> TEXTO PAUSED
             //PLAYING->MOSTRAR EL HUD
 
+        }
+    }
+
+    private void renderElements(Graphics g) {
+        for (Element elemento : gameBoard.getElements()) {
+            if (elemento instanceof Enemy enemigo) {
+                g.drawImage(
+                        EnemySpriterMapper.getImageResource(enemigo.getType()).getImage(),
+                        (int) enemigo.getPosition().getX(),
+                        (int) enemigo.getPosition().getY(),
+                        enemigo.getSize().getWidth(),
+                        enemigo.getSize().getHeight(),
+                        null
+                );
+            } else if (elemento instanceof Bullet bala) {
+                ImageResource imagen;
+
+                if (bala.getOwnerType() == Bullet.OwnerType.Player) {
+                    imagen = ImageResource.BALAPLAYER;
+                } else {
+                    imagen = ImageResource.BALAENEMY;
+                }
+
+                g.drawImage(
+                        imagen.getImage(),
+                        (int) bala.getPosition().getX(),
+                        (int) bala.getPosition().getY(),
+                        bala.getSize().getWidth(),
+                        bala.getSize().getHeight(),
+                        null
+                );
+            }
         }
     }
 
