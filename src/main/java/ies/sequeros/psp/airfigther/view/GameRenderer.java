@@ -99,6 +99,10 @@ public class GameRenderer extends Thread {
         if (this.gameBoard != null) {
 
             this.renderBackground(g,width,height);
+
+            if (gameContext.getStatus() == GameStatus.PLAYING) {
+                hud.render(g, gameBoard.getPlayer(), gameContext, width);
+            }
             if (gameContext.getStatus() == GameStatus.MENU) {
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 24));
