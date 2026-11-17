@@ -11,7 +11,7 @@ import ies.sequeros.psp.airfigther.model.Player;
 import ies.sequeros.psp.airfigther.view.GameRenderer;
 import ies.sequeros.psp.airfigther.view.ScrollingBackground;
 import ies.sequeros.psp.airfigther.engine.PhysicsEngine;
-
+import ies.sequeros.psp.airfigther.engine.audio.BackgroundMusic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +31,7 @@ public class Game extends JPanel {
     private final PhysicsEngine physicsEngine;
     private final GameRenderer gameRenderer;
     //private volatile Player player;
+    private final BackgroundMusic backgroundMusic;
 
 
     private JFrame windows;
@@ -67,10 +68,13 @@ public class Game extends JPanel {
         this.gameRenderer = new GameRenderer(
                 this.gameContext, this.gameBoard, this);
 
+        this.backgroundMusic = new BackgroundMusic(this.gameContext);
+
         // Iniciar los hilos
 
         this.gameRenderer.start();
         this.physicsEngine.start();
+        this.backgroundMusic.start();
     }
 
 
@@ -116,7 +120,13 @@ public class Game extends JPanel {
 
     public void exit() {
         this.gameContext.setStatus(GameStatus.GAME_OVER);
+        if (backgroundMusic != null) {
+            backgroundMusic.shutdown();
+        }
         try {
+            if (backgroundMusic != null) {
+                backgroundMusic.join();
+            }
 
             if (gameRenderer != null)
                 gameRenderer.join();
