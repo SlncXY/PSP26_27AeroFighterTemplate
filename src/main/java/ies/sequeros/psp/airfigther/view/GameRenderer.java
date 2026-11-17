@@ -168,19 +168,29 @@ public class GameRenderer extends Thread {
     }
 
     private void renderDebug(Graphics g) {
-
-        g.setColor(Color.BLUE);
-        Player p = gameBoard.getPlayer();
-
-        int x = (int) p.getPosition().getX();
-        int y = (int) p.getPosition().getY();
-
-        if(gameContext.isDebugMode()){
-           g.drawRect(x, y, p.getSize().getWidth(), p.getSize().getHeight());
+        if (!gameContext.isDebugMode()) {
+            return;
         }
 
+        g.setColor(Color.BLUE);
 
+        Player p = gameBoard.getPlayer();
 
+        g.drawRect(
+                (int) p.getPosition().getX(),
+                (int) p.getPosition().getY(),
+                p.getSize().getWidth(),
+                p.getSize().getHeight()
+        );
+
+        for (Element elemento : gameBoard.getElements()) {
+            g.drawRect(
+                    (int) elemento.getPosition().getX(),
+                    (int) elemento.getPosition().getY(),
+                    elemento.getSize().getWidth(),
+                    elemento.getSize().getHeight()
+            );
+        }
     }
 
 }
