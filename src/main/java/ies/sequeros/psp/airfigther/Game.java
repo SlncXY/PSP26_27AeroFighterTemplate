@@ -12,6 +12,7 @@ import ies.sequeros.psp.airfigther.view.GameRenderer;
 import ies.sequeros.psp.airfigther.view.ScrollingBackground;
 import ies.sequeros.psp.airfigther.engine.PhysicsEngine;
 import ies.sequeros.psp.airfigther.engine.audio.BackgroundMusic;
+import ies.sequeros.psp.airfigther.engine.audio.SoundEffectsPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,7 @@ public class Game extends JPanel {
     private final GameRenderer gameRenderer;
     //private volatile Player player;
     private final BackgroundMusic backgroundMusic;
+    private final SoundEffectsPlayer soundEffectsPlayer;
 
 
     private JFrame windows;
@@ -69,12 +71,14 @@ public class Game extends JPanel {
                 this.gameContext, this.gameBoard, this);
 
         this.backgroundMusic = new BackgroundMusic(this.gameContext);
+        this.soundEffectsPlayer = new SoundEffectsPlayer(this.gameContext);
 
         // Iniciar los hilos
 
         this.gameRenderer.start();
         this.physicsEngine.start();
         this.backgroundMusic.start();
+        this.soundEffectsPlayer.start();
     }
 
 
@@ -119,21 +123,38 @@ public class Game extends JPanel {
     }
 
     public void exit() {
-        this.gameContext.setStatus(GameStatus.GAME_OVER);
+        gameContext.setStatus(GameStatus.GAME_OVER);
+
         if (backgroundMusic != null) {
             backgroundMusic.shutdown();
         }
+
+        if (soundEffectsPlayer != null) {
+            soundEffectsPlayer.shutdown();
+        }
+
         try {
+            if (gameRenderer != null) {
+                gameRenderer.join();
+            }
+
+            if (physicsEngine != null) {
+                physicsEngine.join();
+            }
+
             if (backgroundMusic != null) {
                 backgroundMusic.join();
             }
 
-            if (gameRenderer != null)
-                gameRenderer.join();
+            if (soundEffectsPlayer != null) {
+                soundEffectsPlayer.join();
+            }
+
             System.out.println("fin de juego");
-        System.exit(0);
+            System.exit(0);
+
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
         }
     }
     public static void main(String[] args) throws InterruptedException {
